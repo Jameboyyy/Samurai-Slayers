@@ -5,8 +5,35 @@
     import flash.ui.MouseCursor;
 
     public class game extends MovieClip {
+        private var currentState:String;
+        private var player:Player;
         public function game() {
             trace("Menu Initialized");
+            currentState = gameState.MENU;
+        }
+
+        private function switchState(newState:String):void {
+            currenState = newState; // Update The Game State
+
+            if(current == gameState.GAME) {
+                removeMenu();
+                startGame();
+            }
+        }
+
+        private function removeMenu(newState:String):void {
+            // removeChild ActionScript 3 method removes object
+            removeChild(play__btn);
+            removeChild(option__btn);
+            removeChild(exit__btn)
+        }
+
+        private function startGame():void {
+            player = new Player();
+            addChild(player);
+        }
+
+        private function setupMenu():void {
 
             // Add event listeners to the buttons
             play__btn.addEventListener(MouseEvent.CLICK, onPlayClick);
@@ -27,7 +54,8 @@
         // Play Button Click
 
         private function onPlayClick(e:MouseEvent):void {
-            trace("Play button clicked");
+            trace("Switching to Game State ...");
+            switchState(gameState.GAME);
 
             //Transition to the gameplay state
         }
