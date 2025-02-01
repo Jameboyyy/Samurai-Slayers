@@ -3,29 +3,47 @@
     import flash.events.MouseEvent;
     import flash.ui.Mouse;
     import flash.ui.MouseCursor;
+    import characters.Player;
+    import gamestates.States;
 
-    public class game extends MovieClip {
+    public class Game extends MovieClip {
         private var currentState:String;
         private var player:Player;
-        public function game() {
+        public function Game() {
             trace("Menu Initialized");
-            currentState = gameState.MENU;
+            currentState = States.MENU;
+            setupMenu();
         }
 
         private function switchState(newState:String):void {
-            currenState = newState; // Update The Game State
+            currentState = newState; // Update The Game State
 
-            if(current == gameState.GAME) {
-                removeMenu();
+            removeCurrentState();
+
+            if(currentState == States.INSTRUCTIONS) {
+                instructionState =  new InstructionsState(this);
+                addChild(instructionsState);
+            }
+            else if (currentState == States.GAME){
+                if (instrucitonState) {
+                    instructionState.removeInstruction();
+                }
                 startGame();
             }
         }
 
-        private function removeMenu(newState:String):void {
+        private function removeCurrentState():void {
+            if (instructionState && contains(instructionState)) {
+                removeChild(instructionState);
+                instructionsState = null;
+            }
+        }
+
+        private function removeMenu():void {
             // removeChild ActionScript 3 method removes object
             removeChild(play__btn);
-            removeChild(option__btn);
-            removeChild(exit__btn)
+            removeChild(options__btn);
+            removeChild(exit__btn);
         }
 
         private function startGame():void {
@@ -34,6 +52,7 @@
         }
 
         private function setupMenu():void {
+            trace("Setup Menu Called");
 
             // Add event listeners to the buttons
             play__btn.addEventListener(MouseEvent.CLICK, onPlayClick);
@@ -55,9 +74,9 @@
 
         private function onPlayClick(e:MouseEvent):void {
             trace("Switching to Game State ...");
-            switchState(gameState.GAME);
+            switchState(States.INSTRUCTIONS);
 
-            //Transition to the gameplay state
+            //Transition to the INSTRUCTIONS state
         }
 
         // Option Button Click
